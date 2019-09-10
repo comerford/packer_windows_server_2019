@@ -1,0 +1,79 @@
+{
+    "variables": {
+      "autounattend": "./answer_files/2019/Autounattend.xml",
+      "disk_size": "30720",
+      "disk_type_id": "1",
+      "headless": "false",
+      "hyperv_switchname": "packer-hyperv-iso",
+      "iso_checksum": "221F9ACBC727297A56674A0F1722B8AC7B6E840B4E1FFBDD538A9ED0DA823562",
+      "iso_checksum_type": "sha256",
+      "iso_url": "https://software-download.microsoft.com/download/sg/17763.379.190312-0539.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso",
+      "restart_timeout": "5m",
+      "winrm_timeout": "2h",
+      "full_os_name": "WindowsServer2019"
+    },
+  
+    "builders": [
+      {
+        "boot_wait": "0s",
+        "communicator": "winrm",
+        "cpus": 1,
+        "disk_size": "{{user `disk_size`}}",
+        "enable_secure_boot": false,
+        "floppy_files": [
+          "{{user `autounattend`}}",
+          "./scripts/base/disable_screen_saver.ps1",
+          "./scripts/base/disable_winrm.ps1",
+          "./scripts/base/enable_winrm.ps1",
+          "./scripts/base/configure_microsoft_updates.bat",
+          "./scripts/base/install_windows_updates.ps1"
+        ],
+        "headless": "{{user `headless`}}",
+        "guest_additions_mode": "disable",
+        "iso_checksum": "{{user `iso_checksum`}}",
+        "iso_checksum_type": "{{user `iso_checksum_type`}}",
+        "iso_url": "{{user `iso_url`}}",
+        "memory": 2048,
+        "shutdown_command": "C:/Windows/packer/packer_shutdown.bat",
+        "switch_name": "{{user `hyperv_switchname`}}",
+        "type": "hyperv-iso",
+        "vm_name": "WindowsServer2019",
+        "winrm_password": "vagrant",
+        "winrm_timeout": "{{user `winrm_timeout`}}",
+        "winrm_username": "vagrant"
+      }
+    ],
+  
+    "provisioners": [
+      {
+        "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+        "scripts": [
+          "./scripts/base/install_vm_guest_tools.bat",
+          "./scripts/base/enable_rdp.bat"
+        ],
+        "type": "windows-shell"
+      },
+      {
+        "restart_timeout": "{{user `restart_timeout`}}",
+        "type": "windows-restart"
+      },
+      {
+        "scripts": [
+          "./scripts/base/clean_and_compress.ps1",
+          "./scripts/base/clear_dot_net_NGEN.ps1",
+          "./scripts/base/save_shutdown_command.ps1"
+        ],
+        "type": "powershell"
+      }
+    ],
+  
+    "post-processors": [
+      {
+        "keep_input_artifact": false,
+        "output": "windows_2019_{{.Provider}}.box",
+        "type": "vagrant",
+        "vagrantfile_template": "./builders/hyperv/windows_2019_hyperv.template"
+      }
+    ]
+  }
+  
