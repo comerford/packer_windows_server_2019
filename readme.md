@@ -162,3 +162,11 @@ vagrant box add Windows_Server_2019 windows_2019_hyperv.box
 vagrant init Windows_Server_2019
 vagrant up --provider hyperv
 ```
+
+Example Steps for vmWare:
+
+```
+vagrant box add Windows_Server_2019 windows_2019_vmware.box
+vagrant init Windows_Server_2019
+vagrant up --provider vmware
+```

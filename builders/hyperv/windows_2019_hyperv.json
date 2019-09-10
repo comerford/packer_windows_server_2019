@@ -1,6 +1,6 @@
 {
     "variables": {
-      "autounattend": "./answer_files/2019/Autounattend.xml",
+      "autounattend": "./answer_files/Autounattend.xml",
       "disk_size": "30720",
       "disk_type_id": "1",
       "headless": "false",
@@ -25,7 +25,7 @@
           "./scripts/base/disable_screen_saver.ps1",
           "./scripts/base/disable_winrm.ps1",
           "./scripts/base/enable_winrm.ps1",
-          "./scripts/base/configure_microsoft_updates.bat",
+          "./scripts/base/configure_microsoft_update.bat",
           "./scripts/base/install_windows_updates.ps1"
         ],
         "headless": "{{user `headless`}}",
