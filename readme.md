@@ -9,9 +9,11 @@
     - [Windows](#windows)
       - [Hyper-V](#hyper-v)
       - [VirtualBox](#virtualbox)
+      - [vmWare](#vmware)
   - [Running the Build Script](#running-the-build-script)
     - [Building Hyper-V Images](#building-hyper-v-images)
     - [Building VirtualBox Images](#building-virtualbox-images)
+    - [Building vmWare Images](#building-vmware-images)
   - [Using the Vagrant Images](#using-the-vagrant-images)
 
 <!-- /TOC -->
@@ -26,6 +28,7 @@ For more information about and how to use Packer please review the [documentatio
 
 - Hyper-V
 - VirtualBox
+- vmWare
 
 ## Prepare your system to run Packer
 
@@ -80,11 +83,20 @@ If you are going to build using *VirtualBox* please make sure it is installed on
 choco install virtualbox
 ```
 
+#### vmWare
+
+If you are going to build using *vmWare* please make sure you have *vmWare Workstation* installed on you system.  The command below should help you do this.
+
+**vmWare Workstation**:
+```cmd
+choco install vmwareworkstation
+```
+
 ## Running the Build Script
 
 If you choose to use the `build.ps1` file to create your images it will output a `*.box` file.  The box file is used by **[Vagrant](https://www.vagrantup.com/)** to quickly spin up VM's for testing.  To run the `build.ps1` script you will need the following information.
 
-* Target hypervisor (HyperV or VirtualBox)
+* Target hypervisor (HyperV, VirtualBox, or vmWare)
 * Iso Uri (URL or File path to windows iso)
 * Iso Checksum
 * Iso Checksum type (MD5, Sha256, etc..)
@@ -98,6 +110,8 @@ If you choose to use the `build.ps1` file to create your images it will output a
 
 Below is an example of using the build script to build an image using **Hyper-V**
 
+*Building an image using Hyper-V*
+
 ```powershell
 .\build.ps1 -Target HyperV -IsoUri \\path\to\file\ISO.iso -IsoChecksum "0307D30C9C9A09F88DE5F1D6EDEC3267" -ChecksumType "MD5"
 ```
@@ -109,11 +123,24 @@ Below is an example of using the build script to build an image using **Hyper-V*
 Below is an example of using the build script to build an image using **VirtualBox**
 
 *Building an image using VirtualBox*
+
 ```powershell
 .\build.ps1 -Target VirtualBox -IsoUri https://web.address.example/ISO.iso -IsoChecksum "0307D30C9C9A09F88DE5F1D6EDEC3267" -ChecksumType "MD5"
 ```
 
-> the `IsoUri` can be either a file path or web address.
+> The `IsoUri` can be either a file path or web address.
+
+### Building vmWare Images
+
+Below is an example of using the build script to build an image using **vmWare**
+
+*Building an image using vmWare*
+
+```powershell
+.\build.ps1 -Target vmWare -IsoUri https://web.address.example/ISO.iso -IsoChecksum "0307D30C9C9A09F88DE5F1D6EDEC3267" -ChecksumType "MD5"
+```
+
+> The `IsoUri` can be either a file path or web address.
 
 ## Using the Vagrant Images
 
