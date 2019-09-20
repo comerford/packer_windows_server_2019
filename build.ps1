@@ -20,7 +20,7 @@ param (
     # Target to build with
 
     [Parameter(Mandatory)]
-    [ValidateSet("HyperV","VirtualBox","vmWare")]
+    [ValidateSet("HyperV","VirtualBox")]
     [string]
     $Target,
 
@@ -58,20 +58,6 @@ if($Target -eq "HyperV"){
     packer build -var "iso_url=$IsoUri" -var "iso_checksum=$IsoChecksum" -var "iso_checksum_type=$ChecksumType" $(Get-ChildItem $BuildDirectory\*.json).FullName
 
     
-} elseif ($Target -eq "vmWare") {
-    $BuildDirectory = "$PSScriptRoot\Builders\vmware"    
-    $packerFile = Get-ChildItem $BuildDirectory\*.json | ForEach-Object { packer validate --syntax-only $_.FullName }
-
-    Write-Host "Starting vmWare Build" -ForegroundColor cyan
-
-    if($packerFile -like "*check passed*"){
-        Write-Host "Packer file has been Validated" -ForegroundColor Green
-    } else {
-        Write-Host "Packer file invalid, exiting build" -ForegroundColor Red
-        break
-    }
-
-    packer build -var "iso_url=$IsoUri" -var "iso_checksum=$IsoChecksum" -var "iso_checksum_type=$ChecksumType" $(Get-ChildItem $BuildDirectory\*.json).FullName
 } else {
     $BuildDirectory = "$PSScriptRoot\Builders\virtualbox"    
     $packerFile = Get-ChildItem $BuildDirectory\*.json | ForEach-Object { packer validate --syntax-only $_.FullName }
